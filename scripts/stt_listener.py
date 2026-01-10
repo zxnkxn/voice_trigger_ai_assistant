@@ -1,3 +1,7 @@
+import base64
+import subprocess
+from io import BytesIO
+
 import requests
 import speech_recognition as sr
 
@@ -13,7 +17,12 @@ YANDEX_API_KEY = config["API_KEYS"]["STT"]
 
 YANDEX_STT_URL = "https://stt.api.cloud.yandex.net/speech/v1/stt:recognize"
 
-SAMPLE_RATE = 48000  # fixed sample rate for Yandex STT
+SAMPLE_RATE = 48000
+
+# FastAPI server URL
+SERVER_URL = "http://127.0.0.1:8000/dialog/voice"
+
+TOY_ID = "test-toy-001"
 
 # --------------------------------------------------
 
@@ -53,9 +62,38 @@ def recognize_yandex(audio_data: sr.AudioData) -> str:
     return result.get("result", "")
 
 
-def listen_for_wake_word(wake_word=WAKE_WORD):
+def send_audio_to_server(audio_bytes: bytes, toy_id: str):
     """
-    Listen continuously and print recognized text if it starts with the wake word.
+    Send audio file to FastAPI /dialog/voice endpoint as multipart/form-data.
+    """
+    files = {
+        "audio": ("audio.ogg", BytesIO(audio_bytes), "audio/ogg"),
+    }
+    data = {"toy_id": toy_id}
+
+    try:
+        response = requests.post(SERVER_URL, data=data, files=files, timeout=15)
+        if response.status_code == 200:
+            result = response.json()
+
+            print("Recognized:", result["recognized_text"])
+            print("Assistant:", result["assistant_text"])
+
+            audio_bytes = base64.b64decode(result["audio_base64"])
+
+            with open("response.ogg", "wb") as f:
+                f.write(audio_bytes)
+
+            subprocess.run(["ffplay", "-nodisp", "-autoexit", "response.ogg"])
+        else:
+            print("Server error:", response.status_code, response.text)
+    except Exception as e:
+        print("Error sending audio to server:", e)
+
+
+def listen_and_send(wake_word=WAKE_WORD):
+    """
+    Listen continuously. If recognized phrase starts with wake_word, send it to the server.
     """
     with sr.Microphone(sample_rate=SAMPLE_RATE) as source:
         r.adjust_for_ambient_noise(source)
@@ -71,7 +109,11 @@ def listen_for_wake_word(wake_word=WAKE_WORD):
                     continue
 
                 if text.lower().startswith(wake_word.lower()):
-                    yield (text)
+                    print(f"Wake word detected: {text}")
+                    audio_bytes = audio.get_raw_data(
+                        convert_rate=SAMPLE_RATE, convert_width=2
+                    )
+                    send_audio_to_server(audio_bytes, TOY_ID)
                 else:
                     print("Text does not start with wake word, ignoring")
 
@@ -80,5 +122,4 @@ def listen_for_wake_word(wake_word=WAKE_WORD):
 
 
 if __name__ == "__main__":
-    for t in listen_for_wake_word():
-        print("Recognized:", t)
+    listen_and_send()
