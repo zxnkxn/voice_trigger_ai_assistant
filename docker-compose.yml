@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:18.1
+    container_name: pg
+    environment:
+      POSTGRES_DB: ai_assistant_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql
+
+volumes:
+  pg_data:
