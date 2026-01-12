@@ -1,7 +1,14 @@
+# Wake Word Configuration
 WAKE_WORD: "Маша"
+
+# Audio Configuration
 SILENCE_TIMEOUT: 1.5
 SAMPLE_RATE: 48000
 CONVERT_WIDTH: 2
+
+# Network Configuration
 REQUEST_TIMEOUT: 15
 SERVER_URL: "http://127.0.0.1:8000"
+
+# Device Configuration
 TOY_ID: "test-toy-001"

@@ -1,3 +1,4 @@
+# Yandex Cloud Configuration (Folder ID and associated API Keys)
 YANDEX_CLOUD_FOLDER: "YOUR_FOLDER_ID_HERE"
 API_KEYS:
   STT: "YOUR_STT_API_KEY_HERE"

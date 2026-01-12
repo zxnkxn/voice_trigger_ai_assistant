@@ -9,6 +9,7 @@ YANDEX_API_KEY = api_config["API_KEYS"]["STT"]
 # Load server configuration for SAMPLE_RATE
 server_config = load_config("config/server_config.yml")
 SAMPLE_RATE = server_config["SAMPLE_RATE"]
+TIMEOUT = server_config["TIMEOUT"]
 
 YANDEX_STT_URL = "https://stt.api.cloud.yandex.net/speech/v1/stt:recognize"
 
@@ -33,7 +34,7 @@ def recognize_yandex(audio_bytes: bytes) -> str:
         headers=headers,
         params=params,
         data=audio_bytes,
-        timeout=10,
+        timeout=TIMEOUT,
     )
 
     if response.status_code != 200:

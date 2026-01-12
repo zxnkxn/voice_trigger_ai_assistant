@@ -2,9 +2,14 @@ import openai
 
 from config.config_loader import load_config
 
-config = load_config("config/api_config.yml")
-YANDEX_CLOUD_FOLDER = config["YANDEX_CLOUD_FOLDER"]
-YANDEX_CLOUD_API_KEY = config["API_KEYS"]["AI"]
+api_config = load_config("config/api_config.yml")
+YANDEX_CLOUD_FOLDER = api_config["YANDEX_CLOUD_FOLDER"]
+YANDEX_CLOUD_API_KEY = api_config["API_KEYS"]["AI"]
+
+server_config = load_config("config/server_config.yml")
+MAX_TOKENS = server_config["MAX_TOKENS"]
+TEMPERATURE = server_config["TEMPERATURE"]
+STREAM = server_config["STREAM"]
 
 # Specify which model to use for the assistant
 MODEL_NAME = "aliceai-llm/latest"  # Alice AI LLM
@@ -30,9 +35,9 @@ def ask_ai(conversation_history: list) -> str:
     response = client.chat.completions.create(
         model=f"gpt://{YANDEX_CLOUD_FOLDER}/{MODEL_NAME}",
         messages=conversation_history,
-        max_tokens=150,
-        temperature=0.6,
-        stream=False,
+        max_tokens=MAX_TOKENS,
+        temperature=TEMPERATURE,
+        stream=STREAM,
     )
 
     # Extract assistant reply

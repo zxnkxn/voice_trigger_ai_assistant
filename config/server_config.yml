@@ -1,1 +1,10 @@
+# Audio Configuration
 SAMPLE_RATE: 48000
+
+# AI Responder Configuration
+MAX_TOKENS: 150
+TEMPERATURE: 0.6
+STREAM: False
+
+# STT Processor Configuration
+TIMEOUT: 10
