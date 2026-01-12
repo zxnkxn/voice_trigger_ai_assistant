@@ -1,11 +1,16 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-HOST = "localhost"
-PORT = 5432
-NAME = "ai_assistant_db"
-USER = "user"
-PASSWORD = "password"
+from config.config_loader import load_config
+
+# Load database configuration
+db_config = load_config("config/database_config.yml")
+
+HOST = db_config["HOST"]
+PORT = db_config["PORT"]
+NAME = db_config["NAME"]
+USER = db_config["USER"]
+PASSWORD = db_config["PASSWORD"]
 
 DATABASE_URL = f"postgresql://{USER}:{PASSWORD}@{HOST}:{PORT}/{NAME}"
 

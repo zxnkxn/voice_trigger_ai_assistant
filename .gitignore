@@ -2,7 +2,7 @@
 .env/
 
 # Ignore configuration file with API keys
-config.yml
+api_config.yml
 
 # Ignore Python cache files
 __pycache__/

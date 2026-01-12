@@ -1,0 +1,7 @@
+HOST: "localhost"
+PORT: 5432
+NAME: "ai_assistant_db"
+USER: "user"
+PASSWORD: "password"
+DIALOG_TTL_MINUTES: 10
+MAX_HISTORY_MESSAGES: 8

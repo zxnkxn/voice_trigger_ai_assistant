@@ -1,7 +1,7 @@
 from sqlalchemy import Column, DateTime, Integer, String, Text
 from sqlalchemy.sql import func
 
-from db.database import Base
+from server.db.database import Base
 
 
 class DialogMessage(Base):

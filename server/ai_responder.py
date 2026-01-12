@@ -1,12 +1,8 @@
 import openai
 
-from scripts.config_loader import load_config
+from config.config_loader import load_config
 
-# =========================
-# Configuration
-# =========================
-
-config = load_config()
+config = load_config("config/api_config.yml")
 YANDEX_CLOUD_FOLDER = config["YANDEX_CLOUD_FOLDER"]
 YANDEX_CLOUD_API_KEY = config["API_KEYS"]["AI"]
 
@@ -17,19 +13,11 @@ MODEL_NAME = "aliceai-llm/latest"  # Alice AI LLM
 # YandexGPT 5.1 Pro - yandexgpt/rc
 # Alice AI LLM - aliceai-llm/latest
 
-# =========================
-# OpenAI-compatible client
-# =========================
-
 client = openai.OpenAI(
     api_key=YANDEX_CLOUD_API_KEY,
     base_url="https://llm.api.cloud.yandex.net/v1",
     project=YANDEX_CLOUD_FOLDER,
 )
-
-# =========================
-# Main function
-# =========================
 
 
 def ask_ai(conversation_history: list) -> str:

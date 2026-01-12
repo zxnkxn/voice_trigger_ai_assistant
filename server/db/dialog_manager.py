@@ -2,12 +2,17 @@ from datetime import datetime, timedelta, timezone
 
 from sqlalchemy.orm import Session
 
-from db.models import DialogMessage
+from config.config_loader import load_config
+from server.db.models import DialogMessage
 
-DIALOG_TTL = timedelta(minutes=10)
+# Load database configuration
+db_config = load_config("config/database_config.yml")
+
+# Time-to-live for dialog sessions - after this time, the conversation history is cleared
+DIALOG_TTL = timedelta(minutes=db_config["DIALOG_TTL_MINUTES"])
 
 # Maximum number of messages to keep in conversation history
-MAX_HISTORY_MESSAGES = 8
+MAX_HISTORY_MESSAGES = db_config["MAX_HISTORY_MESSAGES"]
 
 
 def get_dialog_history(db: Session, toy_id: str) -> list[DialogMessage]:

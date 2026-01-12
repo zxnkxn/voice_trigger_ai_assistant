@@ -1,8 +1,8 @@
 import requests
 
-from scripts.config_loader import load_config
+from config.config_loader import load_config
 
-config = load_config()
+config = load_config("config/api_config.yml")
 API_KEY = config["API_KEYS"]["TTS"]
 FOLDER_ID = config["YANDEX_CLOUD_FOLDER"]
 
